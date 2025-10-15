@@ -1,0 +1,433 @@
+{% extends "base.html" %}
+
+{% block title %}Plan: {{ plan.lesson_title }} - CUHK PE Planner{% endblock %}
+
+{% block styles %}
+<style>
+    .print-btn {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        z-index: 100;
+    }
+    .success-message {
+        background-color: #d4edda;
+        border-left: 4px solid #28a745;
+        padding: 1rem;
+        margin-bottom: 2rem;
+    }
+    @media print {
+        .no-print {
+            display: none;
+        }
+        .page, .page-break { break-after: page; }
+        body {
+            font-size: 12pt;
+            color: black;
+        }
+        .card {
+            border: 1px solid black;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Success Message with Feedback Prompt -->
+<div class="success-message no-print">
+    <h5>✅ Lesson Plan Created Successfully!</h5>
+    <p>Your plan has been generated. <strong>How was your experience?</strong> 
+       <a href="#" data-bs-toggle="modal" data-bs-target="#feedbackModal" class="text-decoration-none">Tell us what you think</a> 
+       to help improve the platform.
+    </p>
+</div>
+
+<!-- Content Section -->
+<div>
+    <p style="margin-top:0pt; margin-bottom:0pt; text-align:center; line-height:18pt;"><strong><u><span style="font-family:Times New Roman;">Lesson Plan</span></u></strong></p>
+    <p>Plan ID: {{ plan.id }}</p>
+    <p></p>
+
+    <p style="margin-top:0pt; margin-bottom:0pt; line-height:18pt;"><strong>Student-teacher's name:</strong> &nbsp;{{ plan.teacher_name }}&nbsp;
+        </span>(PESH Year {{ plan.pesh_year }})
+    </p>
+
+    <p style="margin-top:0pt; margin-bottom:0pt; line-height:18pt;"><strong>Date:</strong>&nbsp;&nbsp;{{ plan.date }}&nbsp;&nbsp;&nbsp;&nbsp;
+        <strong>Time:</strong>&nbsp;&nbsp;{{ plan.class_duration }} mins ({{ plan.start_time }} to {{ plan.end_time }})
+    </p>
+
+    <p style="margin-top:0pt; margin-bottom:0pt; line-height:18pt;"><strong>School Name:</strong> {{ plan.school_name }}</p>
+
+    <p style="margin-top:0pt; margin-bottom:0pt; line-height:18pt;"><strong>Year:</strong> &nbsp;{{ plan.year }} &nbsp; <strong>Class: </strong>&nbsp;{{ plan.class_id }} &nbsp; <strong>Level: </strong>&nbsp;{{ plan.class_level }}&nbsp;&nbsp;&nbsp;</span> <strong>Class Size: </strong>{{ plan.class_size }} ( Boys: <u>&nbsp;{{ plan.boys }}&nbsp;</u> Girls: <u>&nbsp;{{ plan.girls }}&nbsp;</u> )&nbsp;&nbsp;</p>
+
+    <p style="margin-top:0pt; margin-bottom:0pt; line-height:18pt;"><strong>Unit Topic: </strong>{{ plan.topic }} (Day {{ plan.day_of_unit }} of {{ plan.unit_duration }} (total number of days) of the Unit)</p>
+
+    <p style="margin-top:0pt; margin-bottom:0pt; line-height:18pt;"><strong>Main Theme of this Lesson</strong>: &nbsp;{{ plan.lesson_theme }}</p>
+    <p style="margin-top:0pt; margin-bottom:0pt; line-height:18pt;"><strong>Students' Ability Level:&nbsp;</strong><strong>&nbsp;</strong> {{ plan.ability_level }}% proficiency</p>
+    <p></p>
+
+    <table cellspacing="5" cellpadding="5" style="border: 0.75pt solid rgb(0, 0, 0); border-collapse: collapse; width: 100%;">
+        <tbody>
+            <tr>
+                <td style="width:790pt; border-top-style:solid; border-top-width:0.75pt; border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:5pt; padding-left:5pt; vertical-align:top;">
+                    <p style="margin-top:0pt; margin-bottom:0pt; line-height:22pt;"><span style="font-size:12pt;">i) Psychomotor performance objectives</span></p>
+                    <p style="margin-top:0pt; margin-bottom:0pt; line-height:22pt;"><span style="font-size:12pt;">{{ plan.psychomotor_objs }}</span></p>
+                </td>
+            </tr>
+
+            <tr>
+                <td style="width:790pt; border-top-style:solid; border-top-width:0.75pt; border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:5pt; padding-left:5pt; vertical-align:top;">
+                    <p style="margin-top:0pt; margin-bottom:0pt; line-height:22pt;"><span style="font-size:12pt;">ii) Cognitive performance objectives</span></p>
+                    <p style="margin-top:0pt; margin-bottom:0pt; line-height:22pt;"><span style="font-size:12pt;">{{ plan.cognitive_objs }}</span></p>
+                </td>
+            </tr>
+
+            <tr>
+                <td style="width:790pt; border-top-style:solid; border-top-width:0.75pt; padding-right:5pt; padding-left:5pt; vertical-align:top;">
+                    <p style="margin-top:0pt; margin-bottom:0pt; line-height:22pt;"><span style="font-size:12pt;">iii) Affective objectives</span></p>
+                    <p style="margin-top:0pt; margin-bottom:0pt; line-height:22pt;"><span style="font-size:12pt;">{{ plan.affective_objs }}</span></p>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <p></p>
+
+    <p style="margin-top:0pt; margin-bottom:0pt; line-height:18pt;">Teaching Venue/Facility: {{ plan.venue }}</p>
+    <p style="margin-top:0pt; margin-bottom:0pt; line-height:18pt;">Equipment: {{ plan.equipment }}</p>
+    <p style="margin-top:0pt; margin-bottom:0pt; line-height:18pt;">Safety Concerns: {{ plan.safety_concerns }}</p>
+    <p></p>
+    
+    <div class="page-break"></div>
+
+    <!-- LESSON PLANNING -->
+
+    <p style="margin-top:0pt; margin-bottom:0pt; line-height:18pt;"><strong><u>2.) Lesson Planning:</u></strong></p>
+    <p></p>
+    <table cellspacing="5" cellpadding="5" style="border:0.75pt solid rgb(0, 0, 0); border-collapse:collapse; width: 100%;">
+        <tbody>
+            <tr style="height:28.05pt;">
+                <td style="width:61pt; border-right-style:solid; border-right-width:0.75pt; border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:1.02pt; padding-left:1.02pt; vertical-align:middle;">
+                    <p style="margin-top:0pt; margin-bottom:0pt; text-align:center; font-size:10pt;"><strong><span style="font-family:Times New Roman;">Time</span></strong></p>
+                </td>
+                <td style="width:194.4pt; border-right-style:solid; border-right-width:0.75pt; border-left-style:solid; border-left-width:0.75pt; border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:1.02pt; padding-left:1.02pt; vertical-align:middle;">
+                    <p style="margin-top:0pt; margin-bottom:0pt; text-align:center; font-size:10pt;"><strong><span style="font-family:Times New Roman;">Teaching Content</span></strong><strong>/</strong><strong><span style="font-family:PMingLiU;">Activity</span></strong></p>
+                </td>
+                <td style="width:181.7pt; border-right-style:solid; border-right-width:0.75pt; border-left-style:solid; border-left-width:0.75pt; border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:1.02pt; padding-left:1.02pt; vertical-align:middle;">
+                    <p style="margin-top:0pt; margin-bottom:0pt; text-align:center; font-size:10pt;"><strong><span style="font-family:Times New Roman;">Teaching Cues</span></strong><strong>/</strong><strong><span style="font-family:PMingLiU;">Objectives</span></strong></p>
+                </td>
+                <td style="width:195.2pt; border-right-style:solid; border-right-width:0.75pt; border-left-style:solid; border-left-width:0.75pt; border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:1.02pt; padding-left:1.02pt; vertical-align:middle;">
+                    <p style="margin-top:0pt; margin-bottom:0pt; text-align:center; font-size:10pt;"><strong><span style="font-family:Times New Roman;">Class Organization</span></strong><strong>/</strong><strong><span style="font-family:PMingLiU;">Management</span></strong><strong>/</strong><strong><span style="font-family:Times New Roman;">Teacher's Positions</span></strong></p>
+                </td>
+                <td style="width:132.2pt; border-left-style:solid; border-left-width:0.75pt; border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:1.02pt; padding-left:1.02pt; vertical-align:middle;">
+                    <p style="margin-top:0pt; margin-bottom:0pt; text-align:center; font-size:10pt;"><strong><span style="font-family:Times New Roman;">Equipment</span></strong></p>
+                </td>
+            </tr>
+
+            <tr>
+                <td style="width:61pt; border-top-style:solid; border-top-width:0.75pt; border-right-style:solid; border-right-width:0.75pt; border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:1.02pt; padding-left:1.02pt; vertical-align:middle;">
+                    <p style="margin-top:0pt; margin-bottom:0pt; text-align:center; font-size:10pt;"><strong>{{ plan.intro_time }} </strong>mins</p>
+                </td>
+                <td style="width:194.4pt; border-style:solid; border-width:0.75pt; padding-right:1.02pt; padding-left:1.02pt; vertical-align:middle;">
+                    <p style="margin-top:0pt; margin-bottom:0pt; font-size:10pt;"><strong>Introductory Activities</strong></p>
+                </td>
+                <td style="width:181.7pt; border-style:solid; border-width:0.75pt; padding-right:1.02pt; padding-left:1.02pt; vertical-align:middle;">
+                    <p style="margin-top:0pt; margin-bottom:0pt; text-align:center; font-size:10pt;">{{ plan.intro_cues }}</p>
+                </td>
+                <td style="width:195.2pt; border-style:solid; border-width:0.75pt; padding-right:1.02pt; padding-left:1.02pt; vertical-align:middle;">
+                    {% if plan.intro_diagram %}
+                        <img src="{{ plan.intro_diagram }}" style="max-width:100%; max-height:100px; display:block; margin:0 auto;" alt="Introductory Activities Diagram">
+                    {% else %}
+                        <p style="margin-top:0pt; margin-bottom:0pt; text-align:center; font-size:8pt;"><em>(No diagram uploaded)</em></p>
+                    {% endif %}
+                </td>
+                <td style="width:132.2pt; border-top-style:solid; border-top-width:0.75pt; border-left-style:solid; border-left-width:0.75pt; border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:1.02pt; padding-left:1.02pt; vertical-align:middle;">
+                    <p style="margin-top:0pt; margin-bottom:0pt; text-align:center; font-size:10pt;">{{ plan.intro_equipment }}</p>
+                </td>
+            </tr>
+
+            <tr>
+                <td style="width:61pt; border-top-style:solid; border-top-width:0.75pt; border-right-style:solid; border-right-width:0.75pt; border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:1.02pt; padding-left:1.02pt; vertical-align:middle;">
+                    <p style="margin-top:0pt; margin-bottom:0pt; text-align:center; font-size:10pt;"><strong>{{ plan.sd_time }} </strong>mins</p>
+                </td>
+                <td style="width:194.4pt; border-style:solid; border-width:0.75pt; padding-right:1.02pt; padding-left:1.02pt; vertical-align:middle;">
+                    <p style="margin-top:0pt; margin-bottom:0pt; font-size:10pt;"><strong>Skill Development</strong></p>
+                </td>
+                <td style="width:181.7pt; border-style:solid; border-width:0.75pt; padding-right:1.02pt; padding-left:1.02pt; vertical-align:middle;">
+                    <p style="margin-top:0pt; margin-bottom:0pt; text-align:center; font-size:10pt;">{{ plan.sd_cues }}</p>
+                </td>
+                <td style="width:195.2pt; border-style:solid; border-width:0.75pt; padding-right:1.02pt; padding-left:1.02pt; vertical-align:middle;">
+                    {% if plan.sd_diagram %}
+                        <img src="{{ plan.sd_diagram }}" style="max-width:100%; max-height:100px; display:block; margin:0 auto;" alt="Skill Development Diagram">
+                    {% else %}
+                        <p style="margin-top:0pt; margin-bottom:0pt; text-align:center; font-size:8pt;"><em>(No diagram uploaded)</em></p>
+                    {% endif %}
+                </td>
+                <td style="width:132.2pt; border-top-style:solid; border-top-width:0.75pt; border-left-style:solid; border-left-width:0.75pt; border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:1.02pt; padding-left:1.02pt; vertical-align:middle;">
+                    <p style="margin-top:0pt; margin-bottom:0pt; text-align:center; font-size:10pt;">{{ plan.sd_equipment }}</p>
+                </td>
+            </tr>
+
+            <tr>
+                <td style="width:61pt; border-top-style:solid; border-top-width:0.75pt; border-right-style:solid; border-right-width:0.75pt; border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:1.02pt; padding-left:1.02pt; vertical-align:middle;">
+                    <p style="margin-top:0pt; margin-bottom:0pt; text-align:center; font-size:10pt;"><strong>{{ plan.appli_time }} </strong>mins</p>
+                </td>
+                <td style="width:194.4pt; border-style:solid; border-width:0.75pt; padding-right:1.02pt; padding-left:1.02pt; vertical-align:middle;">
+                    <p style="margin-top:0pt; margin-bottom:0pt; font-size:10pt;"><strong>Application</strong></p>
+                </td>
+                <td style="width:181.7pt; border-style:solid; border-width:0.75pt; padding-right:1.02pt; padding-left:1.02pt; vertical-align:middle;">
+                    <p style="margin-top:0pt; margin-bottom:0pt; text-align:center; font-size:10pt;">{{ plan.appli_cues }}</p>
+                </td>
+                <td style="width:195.2pt; border-style:solid; border-width:0.75pt; padding-right:1.02pt; padding-left:1.02pt; vertical-align:middle;">
+                    {% if plan.appli_diagram %}
+                        <img src="{{ plan.appli_diagram }}" style="max-width:100%; max-height:100px; display:block; margin:0 auto;" alt="Application Diagram">
+                    {% else %}
+                        <p style="margin-top:0pt; margin-bottom:0pt; text-align:center; font-size:8pt;"><em>(No diagram uploaded)</em></p>
+                    {% endif %}
+                </td>
+                <td style="width:132.2pt; border-top-style:solid; border-top-width:0.75pt; border-left-style:solid; border-left-width:0.75pt; border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:1.02pt; padding-left:1.02pt; vertical-align:middle;">
+                    <p style="margin-top:0pt; margin-bottom:0pt; text-align:center; font-size:10pt;">{{ plan.appli_equipment }}</p>
+                </td>
+            </tr>
+
+            <tr>
+                <td style="width:61pt; border-top-style:solid; border-top-width:0.75pt; border-right-style:solid; border-right-width:0.75pt; padding-right:1.02pt; padding-left:1.02pt; vertical-align:middle;">
+                    <p style="margin-top:0pt; margin-bottom:0pt; text-align:center; font-size:10pt;"><strong>{{ plan.ca_time }} </strong>mins</p>
+                </td>
+                <td style="width:194.4pt; border-top-style:solid; border-top-width:0.75pt; border-right-style:solid; border-right-width:0.75pt; border-left-style:solid; border-left-width:0.75pt; padding-right:1.02pt; padding-left:1.02pt; vertical-align:middle;">
+                    <p style="margin-top:0pt; margin-bottom:0pt; font-size:10pt;"><strong>Concluding Activities</strong></p>
+                </td>
+                <td style="width:181.7pt; border-top-style:solid; border-top-width:0.75pt; border-right-style:solid; border-right-width:0.75pt; border-left-style:solid; border-left-width:0.75pt; padding-right:1.02pt; padding-left:1.02pt; vertical-align:middle;">
+                    <p style="margin-top:0pt; margin-bottom:0pt; text-align:center; font-size:10pt;">{{ plan.ca_cues }}</p>
+                </td>
+                <td style="width:195.2pt; border-style:solid; border-width:0.75pt; padding-right:1.02pt; padding-left:1.02pt; vertical-align:middle;">
+                    {% if plan.ca_diagram %}
+                        <img src="{{ plan.ca_diagram }}" style="max-width:100%; max-height:100px; display:block; margin:0 auto;" alt="Concluding Activities Diagram">
+                    {% else %}
+                        <p style="margin-top:0pt; margin-bottom:0pt; text-align:center; font-size:8pt;"><em>(No diagram uploaded)</em></p>
+                    {% endif %}
+                </td>
+                <td style="width:132.2pt; border-top-style:solid; border-top-width:0.75pt; border-left-style:solid; border-left-width:0.75pt; padding-right:1.02pt; padding-left:1.02pt; vertical-align:middle;">
+                    <p style="margin-top:0pt; margin-bottom:0pt; text-align:center; font-size:10pt;">{{ plan.ca_equipment }}</p>
+                </td>
+            </tr>
+
+            
+        </tbody>
+    </table>
+    <p></p>
+
+    <table cellspacing="5" cellpadding="5" style="border: 0.75pt solid rgb(0, 0, 0); border-collapse: collapse; width: 100%;">
+        <tbody>
+            <tr>
+                <td style="width:790.7pt; border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top;">
+                    <p style="margin-top:0pt; margin-bottom:0pt; line-height:18pt;"><strong><u><span style="font-size:12pt;">3.)Follow-up Actions:</span></u></strong></p>
+                    <p style="margin-top:0pt; margin-bottom:0pt; line-height:18pt;">{{ plan.followup_actions }}</p>
+                </td>
+            </tr>
+            <tr>
+                <td style="width:790.7pt; border-top-style:solid; border-top-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top;">
+                    <p style="margin-top:0pt; margin-bottom:0pt; line-height:18pt;"><strong><u><span style="font-size:12pt;">4.)Self-reflection:</span></u></strong></p>
+                    <p style="margin-top:0pt; margin-bottom:0pt; line-height:18pt;">{{ plan.self_reflection }}</p>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <div class="page-break"></div>
+
+    <p style="margin-top:0pt; margin-bottom:0pt; text-align:center; line-height:18pt;"><span style="font-family:'CG Times'; font-size:14pt;">&nbsp;</span><strong><u><span style="font-family:PMingLiU;">教案</span></u></strong></p>
+    <p style="margin-top:0pt; margin-bottom:0pt; line-height:18pt;">&nbsp;</p>
+    <p style="margin-top:0pt; margin-bottom:0pt; line-height:18pt;"><span style="font-family:PMingLiU;">實習教師姓名</span>: &nbsp;____________________________&nbsp; <span style="width:8.75pt; display:inline-block;">&nbsp;</span><span style="width:24pt; display:inline-block;">&nbsp;</span>(PESH Year___)</p>
+    <p style="margin-top:0pt; margin-bottom:0pt; line-height:18pt;"><strong><span style="font-family:PMingLiU;">日期</span></strong>: &nbsp;______________ <span style="width:23.67pt; display:inline-block;">&nbsp;</span><span style="width:24pt; display:inline-block;">&nbsp;</span><span style="font-family:PMingLiU;">上課時間</span>: ______<span style="font-family:PMingLiU;">分鐘&nbsp;</span>(<span style="font-family:PMingLiU;">上午</span>/<span style="font-family:PMingLiU;">下午</span>__:___ <span style="font-family:PMingLiU;">至&nbsp;</span>__:___ )</p>
+    <p style="margin-top:0pt; margin-bottom:0pt; line-height:18pt;"><strong><span style="font-family:PMingLiU;">學校名稱</span></strong>: ______________________________ <span style="width:2.67pt; display:inline-block;">&nbsp;</span></p>
+    <p style="margin-top:0pt; margin-bottom:0pt; line-height:18pt;"><span style="font-family:PMingLiU;">班級</span>: &nbsp;______ <span style="font-family:Wingdings;"></span> <span style="font-family:PMingLiU;">小學</span><span style="width:9.97pt; display:inline-block;">&nbsp;</span><span style="font-family:Wingdings;"></span> <span style="font-family:PMingLiU;">中學</span><span style="width:10.31pt; display:inline-block;">&nbsp;</span><span style="font-family:PMingLiU;">&nbsp;</span><strong><span style="font-family:PMingLiU;">學生人數</span></strong>:_____( <span style="font-family:Wingdings;"></span> <span style="font-family:PMingLiU;">男生</span>:<u>&nbsp;&nbsp;&nbsp;&nbsp;</u> <span style="font-family:Wingdings;"></span> <span style="font-family:PMingLiU;">女生</span>:<u>&nbsp;&nbsp;&nbsp;&nbsp;</u> )&nbsp;&nbsp;</p>
+    <p style="margin-top:0pt; margin-bottom:0pt; line-height:18pt;"><strong><span style="font-family:PMingLiU;">單元主題</span></strong><span style="font-family:PMingLiU;">&nbsp;</span>_________________________________(<span style="font-family:PMingLiU;">本單元第</span>____/ ___()<span style="font-family:PMingLiU;">課時</span>)</p>
+    <p style="margin-top:0pt; margin-bottom:0pt; line-height:18pt;"><strong><span style="font-family:PMingLiU;">本教節的教學主題</span></strong>: &nbsp;___________________________________________________________________________________________</p>
+    <p style="margin-top:0pt; margin-bottom:0pt; line-height:18pt;"><strong><span style="font-family:PMingLiU;">學生能力</span></strong><strong>:&nbsp;</strong><strong>&nbsp;</strong><strong><span style="font-family:PMingLiU;">初學者</span></strong>:____% / <span style="font-family:PMingLiU;">中級</span>:____% / <span style="font-family:PMingLiU;">高級</span>:____%</p>
+    <p style="margin-top:0pt; margin-bottom:0pt; line-height:18pt;">&nbsp;</p>
+    <table cellspacing="0" cellpadding="0" style="border: 0.75pt solid rgb(0, 0, 0); border-collapse: collapse; width: 100%;">
+        <tbody>
+            <tr>
+                <td style="width:790.7pt; border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top;">
+                    <p style="margin-top:0pt; margin-bottom:0pt; line-height:18pt;"><strong><u><span style="font-size:12pt;">1.)</span></u></strong><strong><u><span style="font-family:PMingLiU; font-size:12pt;">教學目標</span></u></strong><strong><u><span style="font-size:12pt;">:</span></u></strong></p>
+                </td>
+            </tr>
+            <tr style="height:44.95pt;">
+                <td style="width:790.7pt; border-top-style:solid; border-top-width:0.75pt; border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top;">
+                    <p style="margin-top:0pt; margin-bottom:0pt; line-height:22pt;"><span style="font-size:12pt;">i)&nbsp;</span><span style="font-family:DengXian; font-size:12pt;">技能</span><span style="font-family:PMingLiU; font-size:12pt;">表現目標</span><span style="font-family:PMingLiU; font-size:12pt;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></p>
+                </td>
+            </tr>
+            <tr style="height:49.4pt;">
+                <td style="width:790.7pt; border-top-style:solid; border-top-width:0.75pt; border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top;">
+                    <p style="margin-top:0pt; margin-bottom:0pt; line-height:22pt;"><span style="font-size:12pt;">ii)&nbsp;</span><span style="font-family:PMingLiU; font-size:12pt;">認知表現目標</span></p>
+                </td>
+            </tr>
+            <tr style="height:52.5pt;">
+                <td style="width:790.7pt; border-top-style:solid; border-top-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top;">
+                    <p style="margin-top:0pt; margin-bottom:0pt; line-height:22pt;"><span style="font-size:12pt;">iii)&nbsp;</span><span style="font-family:PMingLiU; font-size:12pt;">情意表現目標</span></p>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <p style="margin-top:0pt; margin-bottom:0pt; line-height:22pt;"><span style="font-size:9pt;">&nbsp;</span></p>
+    <p style="margin-top:0pt; margin-bottom:0pt; line-height:18pt;"><span style="font-family:PMingLiU;">教學場地</span>/<span style="font-family:PMingLiU;">器材</span>: __________________________________________________________________________________________________</p>
+    <p style="margin-top:0pt; margin-bottom:0pt; line-height:18pt;">&nbsp;</p>
+    <p style="margin-top:0pt; margin-bottom:0pt; line-height:18pt;"><span style="font-family:PMingLiU;">所需器材</span><span style="font-family:DengXian;">／用具</span>: _____________________________________________________________________________________________________________</p>
+    <p style="margin-top:0pt; margin-bottom:0pt; line-height:18pt;">&nbsp;</p>
+    <p style="margin-top:0pt; margin-bottom:0pt; line-height:18pt;"><span style="font-family:PMingLiU;">安全考慮</span>: _________________________________________________________________________________________________________</p>
+    <p style="margin-top:0pt; margin-bottom:0pt; line-height:18pt;">&nbsp;</p>
+    
+    <div class="page-break"></div>
+
+    <p style="margin-top:0pt; margin-bottom:0pt; line-height:18pt;"><strong><u>2.)</u></strong><strong><u><span style="font-family:PMingLiU;">教案規劃</span></u></strong><strong><u>:</u></strong></p>
+    <p style="margin-top:0pt; margin-bottom:0pt; line-height:18pt;"><strong>&nbsp;</strong></p>
+    <table cellspacing="0" cellpadding="0" style="width:779.25pt; margin-left:1.4pt; border:0.75pt solid #000000; border-collapse:collapse;">
+        <tbody>
+            <tr style="height:28.05pt;">
+                <td style="width:61pt; border-right-style:solid; border-right-width:0.75pt; border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:1.02pt; padding-left:1.02pt; vertical-align:middle;">
+                    <p style="margin-top:0pt; margin-bottom:0pt; text-align:center; font-size:10pt;"><strong><span style="font-family:PMingLiU;">時間</span></strong></p>
+                </td>
+                <td style="width:194.4pt; border-right-style:solid; border-right-width:0.75pt; border-left-style:solid; border-left-width:0.75pt; border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:1.02pt; padding-left:1.02pt; vertical-align:middle;">
+                    <p style="margin-top:0pt; margin-bottom:0pt; text-align:center; font-size:10pt;"><strong><span style="font-family:PMingLiU;">教學內容</span></strong><strong>/</strong><strong><span style="font-family:PMingLiU;">活動</span></strong></p>
+                </td>
+                <td style="width:181.7pt; border-right-style:solid; border-right-width:0.75pt; border-left-style:solid; border-left-width:0.75pt; border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:1.02pt; padding-left:1.02pt; vertical-align:middle;">
+                    <p style="margin-top:0pt; margin-bottom:0pt; text-align:center; font-size:10pt;"><strong><span style="font-family:PMingLiU;">教學要點</span></strong><strong>/</strong><strong><span style="font-family:PMingLiU;">目標</span></strong></p>
+                </td>
+                <td style="width:195.2pt; border-right-style:solid; border-right-width:0.75pt; border-left-style:solid; border-left-width:0.75pt; border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:1.02pt; padding-left:1.02pt; vertical-align:middle;">
+                    <p style="margin-top:0pt; margin-bottom:0pt; text-align:center; font-size:10pt;"><strong><span style="font-family:PMingLiU;">課堂組織</span></strong><strong>/</strong><strong><span style="font-family:PMingLiU;">管理</span></strong><strong>/</strong><strong><span style="font-family:PMingLiU;">教師位置</span></strong></p>
+                </td>
+                <td style="width:132.2pt; border-left-style:solid; border-left-width:0.75pt; border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:1.02pt; padding-left:1.02pt; vertical-align:middle;">
+                    <p style="margin-top:0pt; margin-bottom:0pt; text-align:center; font-size:10pt;"><span style="font-family:新細明體;">所需器材／用具</span></p>
+                </td>
+            </tr>
+            <tr style="height:116.7pt;">
+                <td style="width:61pt; border-top-style:solid; border-top-width:0.75pt; border-right-style:solid; border-right-width:0.75pt; border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:1.02pt; padding-left:1.02pt; vertical-align:middle;">
+                    <p style="margin-top:0pt; margin-bottom:0pt; text-align:center; font-size:10pt;"><strong>____</strong><strong><span style="font-family:PMingLiU;">分鐘</span></strong></p>
+                </td>
+                <td style="width:194.4pt; border-style:solid; border-width:0.75pt; padding-right:1.02pt; padding-left:1.02pt; vertical-align:middle;">
+                    <p style="margin-top:0pt; margin-bottom:0pt; font-size:10pt;"><strong><span style="font-family:PMingLiU;">引入活動</span></strong></p>
+                </td>
+                <td style="width:181.7pt; border-style:solid; border-width:0.75pt; padding-right:1.02pt; padding-left:1.02pt; vertical-align:middle;">
+                    <p style="margin-top:0pt; margin-bottom:0pt; text-align:center; font-size:10pt;"><strong>&nbsp;</strong></p>
+                </td>
+                <td style="width:195.2pt; border-style:solid; border-width:0.75pt; padding-right:1.02pt; padding-left:1.02pt; vertical-align:middle;">
+                    <p style="margin-top:0pt; margin-bottom:0pt; text-align:right; font-size:10pt;"><em>&nbsp;</em></p>
+                    <p style="margin-top:0pt; margin-bottom:0pt; text-align:right; font-size:10pt;"><em>&nbsp;</em></p>
+                    <p style="margin-top:0pt; margin-bottom:0pt; text-align:right; font-size:10pt;"><em>&nbsp;</em></p>
+                    <p style="margin-top:0pt; margin-bottom:0pt; text-align:right; font-size:10pt;"><em>&nbsp;</em></p>
+                    <p style="margin-top:0pt; margin-bottom:0pt; text-align:right; font-size:10pt;"><em>&nbsp;</em></p>
+                    <p style="margin-top:0pt; margin-bottom:0pt; text-align:right; font-size:10pt;"><em>&nbsp;</em></p>
+                    <p style="margin-top:0pt; margin-bottom:0pt; text-align:right; font-size:10pt;"><em>&nbsp;</em></p>
+                    <p style="margin-top:0pt; margin-bottom:0pt; text-align:right; font-size:10pt;"><em>&nbsp;</em></p>
+                    <p style="margin-top:0pt; margin-bottom:0pt; text-align:right; font-size:10pt;"><em>&nbsp;</em></p>
+                    <p style="margin-top:0pt; margin-bottom:0pt; text-align:right; font-size:10pt;"><em>&nbsp;</em></p>
+                    <p style="margin-top:0pt; margin-bottom:0pt; text-align:right; font-size:8pt;"><em>&nbsp;</em></p>
+                    <p style="margin-top:0pt; margin-bottom:0pt; text-align:right; font-size:8pt;"><em>(Drawing Diagrams)</em></p>
+                </td>
+                <td style="width:132.2pt; border-top-style:solid; border-top-width:0.75pt; border-left-style:solid; border-left-width:0.75pt; border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:1.02pt; padding-left:1.02pt; vertical-align:middle;">
+                    <p style="margin-top:0pt; margin-bottom:0pt; text-align:center; font-size:10pt;"><em>&nbsp;</em></p>
+                </td>
+            </tr>
+            <tr style="height:121.8pt;">
+                <td style="width:61pt; border-top-style:solid; border-top-width:0.75pt; border-right-style:solid; border-right-width:0.75pt; border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:1.02pt; padding-left:1.02pt; vertical-align:middle;">
+                    <p style="margin-top:0pt; margin-bottom:0pt; text-align:center; font-size:10pt;"><strong>____</strong><strong><span style="font-family:PMingLiU;">分鐘</span></strong></p>
+                </td>
+                <td style="width:194.4pt; border-style:solid; border-width:0.75pt; padding-right:1.02pt; padding-left:1.02pt; vertical-align:middle;">
+                    <p style="margin-top:0pt; margin-bottom:0pt; font-size:10pt;"><strong><span style="font-family:PMingLiU;">主題發展</span></strong><strong>/</strong><strong><span style="font-family:PMingLiU;">技能發展</span></strong></p>
+                </td>
+                <td style="width:181.7pt; border-style:solid; border-width:0.75pt; padding-right:1.02pt; padding-left:1.02pt; vertical-align:middle;">
+                    <p style="margin-top:0pt; margin-bottom:0pt; text-align:center; font-size:10pt;"><strong>&nbsp;</strong></p>
+                </td>
+                <td style="width:195.2pt; border-style:solid; border-width:0.75pt; padding-right:1.02pt; padding-left:1.02pt; vertical-align:middle;">
+                    <p style="margin-top:0pt; margin-bottom:0pt; text-align:center; font-size:10pt;"><em>&nbsp;</em></p>
+                </td>
+                <td style="width:132.2pt; border-top-style:solid; border-top-width:0.75pt; border-left-style:solid; border-left-width:0.75pt; border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:1.02pt; padding-left:1.02pt; vertical-align:middle;">
+                    <p style="margin-top:0pt; margin-bottom:0pt; text-align:center; font-size:10pt;"><em>&nbsp;</em></p>
+                </td>
+            </tr>
+            <tr style="height:102.55pt;">
+                <td style="width:61pt; border-top-style:solid; border-top-width:0.75pt; border-right-style:solid; border-right-width:0.75pt; border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:1.02pt; padding-left:1.02pt; vertical-align:middle;">
+                    <p style="margin-top:0pt; margin-bottom:0pt; text-align:center; font-size:10pt;"><strong>____</strong><strong><span style="font-family:PMingLiU;">分鐘</span></strong></p>
+                </td>
+                <td style="width:194.4pt; border-style:solid; border-width:0.75pt; padding-right:1.02pt; padding-left:1.02pt; vertical-align:middle;">
+                    <p style="margin-top:0pt; margin-bottom:0pt; font-size:10pt;"><strong><span style="font-family:PMingLiU;">鞏固</span></strong><strong>/</strong><strong><span style="font-family:PMingLiU;">應用活動</span></strong></p>
+                </td>
+                <td style="width:181.7pt; border-style:solid; border-width:0.75pt; padding-right:1.02pt; padding-left:1.02pt; vertical-align:middle;">
+                    <p style="margin-top:0pt; margin-bottom:0pt; text-align:center; font-size:10pt;"><strong>&nbsp;</strong></p>
+                </td>
+                <td style="width:195.2pt; border-style:solid; border-width:0.75pt; padding-right:1.02pt; padding-left:1.02pt; vertical-align:middle;">
+                    <p style="margin-top:0pt; margin-bottom:0pt; text-align:center; font-size:10pt;"><em>&nbsp;</em></p>
+                    <p style="margin-top:0pt; margin-bottom:0pt; text-align:center; font-size:10pt;"><em>&nbsp;</em></p>
+                    <p style="margin-top:0pt; margin-bottom:0pt; text-align:center; font-size:10pt;"><em>&nbsp;</em></p>
+                    <p style="margin-top:0pt; margin-bottom:0pt; text-align:center; font-size:10pt;"><em>&nbsp;</em></p>
+                    <p style="margin-top:0pt; margin-bottom:0pt; text-align:center; font-size:10pt;"><em>&nbsp;</em></p>
+                    <p style="margin-top:0pt; margin-bottom:0pt; text-align:center; font-size:10pt;"><em>&nbsp;</em></p>
+                    <p style="margin-top:0pt; margin-bottom:0pt; text-align:center; font-size:10pt;"><em>&nbsp;</em></p>
+                    <p style="margin-top:0pt; margin-bottom:0pt; text-align:center; font-size:10pt;"><em>&nbsp;</em></p>
+                    <p style="margin-top:0pt; margin-bottom:0pt; text-align:center; font-size:10pt;"><em>&nbsp;</em></p>
+                    <p style="margin-top:0pt; margin-bottom:0pt; text-align:center; font-size:10pt;"><em>&nbsp;</em></p>
+                    <p style="margin-top:0pt; margin-bottom:0pt; text-align:center; font-size:10pt;"><em>&nbsp;</em></p>
+                    <p style="margin-top:0pt; margin-bottom:0pt; text-align:center; font-size:10pt;"><em>&nbsp;</em></p>
+                </td>
+                <td style="width:132.2pt; border-top-style:solid; border-top-width:0.75pt; border-left-style:solid; border-left-width:0.75pt; border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:1.02pt; padding-left:1.02pt; vertical-align:middle;">
+                    <p style="margin-top:0pt; margin-bottom:0pt; text-align:center; font-size:10pt;"><em>&nbsp;</em></p>
+                </td>
+            </tr>
+            <tr style="height:79.05pt;">
+                <td style="width:61pt; border-top-style:solid; border-top-width:0.75pt; border-right-style:solid; border-right-width:0.75pt; padding-right:1.02pt; padding-left:1.02pt; vertical-align:middle;">
+                    <p style="margin-top:0pt; margin-bottom:0pt; text-align:center; font-size:10pt;"><strong>____</strong><strong><span style="font-family:PMingLiU;">分鐘</span></strong></p>
+                </td>
+                <td style="width:194.4pt; border-top-style:solid; border-top-width:0.75pt; border-right-style:solid; border-right-width:0.75pt; border-left-style:solid; border-left-width:0.75pt; padding-right:1.02pt; padding-left:1.02pt; vertical-align:middle;">
+                    <p style="margin-top:0pt; margin-bottom:0pt; font-size:10pt;"><strong><span style="font-family:PMingLiU;">整理活動</span></strong></p>
+                </td>
+                <td style="width:181.7pt; border-top-style:solid; border-top-width:0.75pt; border-right-style:solid; border-right-width:0.75pt; border-left-style:solid; border-left-width:0.75pt; padding-right:1.02pt; padding-left:1.02pt; vertical-align:middle;">
+                    <p style="margin-top:0pt; margin-bottom:0pt; text-align:center; font-size:10pt;"><strong>&nbsp;</strong></p>
+                </td>
+                <td style="width:195.2pt; border-top-style:solid; border-top-width:0.75pt; border-right-style:solid; border-right-width:0.75pt; border-left-style:solid; border-left-width:0.75pt; padding-right:1.02pt; padding-left:1.02pt; vertical-align:middle;">
+                    <p style="margin-top:0pt; margin-bottom:0pt; text-align:center; font-size:10pt;"><em>&nbsp;</em></p>
+                    <p style="margin-top:0pt; margin-bottom:0pt; text-align:center; font-size:10pt;"><em>&nbsp;</em></p>
+                    <p style="margin-top:0pt; margin-bottom:0pt; text-align:center; font-size:10pt;"><em>&nbsp;</em></p>
+                    <p style="margin-top:0pt; margin-bottom:0pt; text-align:center; font-size:10pt;"><em>&nbsp;</em></p>
+                    <p style="margin-top:0pt; margin-bottom:0pt; text-align:center; font-size:10pt;"><em>&nbsp;</em></p>
+                    <p style="margin-top:0pt; margin-bottom:0pt; text-align:center; font-size:10pt;"><em>&nbsp;</em></p>
+                    <p style="margin-top:0pt; margin-bottom:0pt; text-align:center; font-size:10pt;"><em>&nbsp;</em></p>
+                    <p style="margin-top:0pt; margin-bottom:0pt; text-align:center; font-size:10pt;"><em>&nbsp;</em></p>
+                    <p style="margin-top:0pt; margin-bottom:0pt; text-align:center; font-size:10pt;"><em>&nbsp;</em></p>
+                    <p style="margin-top:0pt; margin-bottom:0pt; text-align:center; font-size:10pt;"><em>&nbsp;</em></p>
+                    <p style="margin-top:0pt; margin-bottom:0pt; text-align:center; font-size:10pt;"><em>&nbsp;</em></p>
+                </td>
+                <td style="width:132.2pt; border-top-style:solid; border-top-width:0.75pt; border-left-style:solid; border-left-width:0.75pt; padding-right:1.02pt; padding-left:1.02pt; vertical-align:middle;">
+                    <p style="margin-top:0pt; margin-bottom:0pt; text-align:center; font-size:10pt;"><em>&nbsp;</em></p>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <p style="margin-top:0pt; margin-bottom:0pt; line-height:18pt;"><strong>&nbsp;</strong></p>
+    <table cellspacing="0" cellpadding="0" style="border: 0.75pt solid rgb(0, 0, 0); border-collapse: collapse; width: 100%;">
+        <tbody>
+            <tr style="height:42.05pt;">
+                <td style="width:790.7pt; border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top;">
+                    <p style="margin-top:0pt; margin-bottom:0pt; line-height:18pt;"><strong><u><span style="font-size:12pt;">3.)</span></u></strong><strong><u><span style="font-family:PMingLiU; font-size:12pt;">跟進事項</span></u></strong><strong><u><span style="font-size:12pt;">:</span></u></strong></p>
+                </td>
+            </tr>
+            <tr style="height:44.4pt;">
+                <td style="width:790.7pt; border-top-style:solid; border-top-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top;">
+                    <p style="margin-top:0pt; margin-bottom:0pt; line-height:18pt;"><strong><u><span style="font-size:12pt;">4.)</span></u></strong><strong><u><span style="font-family:PMingLiU; font-size:12pt;">自我反思</span></u></strong><strong><u><span style="font-size:12pt;">:</span></u></strong></p>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="text-center mt-4 no-print">
+    <a href="{{ url_for('create_plan_form') }}" class="btn btn-primary me-2">Create Another Plan</a>
+    <button onclick="window.print()" class="btn btn-outline-primary me-2">Print Plan</button>
+    <button class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#feedbackModal">
+        💬 Feedback
+    </button>
+</div>
+
+<button onclick="window.print()" class="btn btn-primary print-btn no-print">
+    📄 Print
+</button>
+{% endblock %}

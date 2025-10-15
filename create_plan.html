@@ -1,0 +1,275 @@
+{% extends "base.html" %}
+
+{% block title %}Create Lesson Plan - CUHK PE Planner{% endblock %}
+
+{% block styles %}
+<style>
+    .form-container {
+        background-color: #f8f9fa;
+        border-radius: 10px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+    }
+    .required-field::after {
+        content: " *";
+        color: red;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<h2 class="text-center mb-4">Create a New Lesson Plan</h2>
+
+<div class="form-container">
+    <form method="POST" action="{{ url_for('create_plan') }}" enctype="multipart/form-data">
+        <div class="row">
+            <div class="col-sm-6 mb-3">
+                <label class="form-label required-field">Teacher's Name</label>
+                <input type="text" class="form-control" name="teacher_name" required>
+            </div>
+            <div class="col-sm-2 mb-3">
+                <label class="form-label required-field">PESH Year</label>
+                <input type="number" class="form-control" name="pesh_year" required>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-4 mb-3">
+                <label class="form-label required-field">Date</label>
+                <input type="text" class="form-control" name="date" placeholder="DD/MM/YYYY" required>
+            </div>
+            <div class="col-sm-2 mb-3">
+                <label class="form-label required-field">Duration (mins)</label>
+                <input type="number" class="form-control" name="class_duration" required>
+            </div>
+            <div class="col-sm-3 mb-3">
+                <label class="form-label required-field">Start Time</label>
+                <input type="time" class="form-control" name="start_time" required>
+            </div>
+            <div class="col-sm-3 mb-3">
+                <label class="form-label required-field">End Time</label>
+                <input type="time" class="form-control" name="end_time" required>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="mb-3">
+                <label class="form-label required-field">School Name</label>
+                <input type="text" class="form-control" name="school_name" required>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-2 mb-3">
+                <label class="form-label required-field">Year</label>
+                <input type="number" class="form-control" name="year" required>
+            </div>
+            <div class="col-sm-2 mb-3">
+                <label class="form-label required-field">Class</label>
+                <input type="text" class="form-control" name="class_id" required>
+            </div>
+            <div class="col-sm-2 mb-3 required-field">
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="class_level" id="primary" value="Primary">
+                    <label class="form-check-label" for="primary">
+                        Primary
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="class_level" id="secondary" value="Secondary">
+                    <label class="form-check-label" for="secondary">
+                        Secondary
+                    </label>
+                </div>
+            </div>
+            <div class="col-sm-2 mb-3">
+                <label class="form-label required-field">Class Size</label>
+                <input type="number" class="form-control" name="class_size" required>
+            </div>
+            <div class="col-sm-2 mb-3">
+                <label class="form-label">Boys</label>
+                <input type="number" class="form-control" name="boys">
+            </div>
+            <div class="col-sm-2 mb-3">
+                <label class="form-label">Girls</label>
+                <input type="number" class="form-control" name="girls">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-4 mb-3">
+                <label class="form-label required-field">Unit Topic</label>
+                <input type="text" class="form-control" name="topic" required>
+            </div>
+            <div class="col-sm-4 mb-3">
+                <label class="form-label required-field">Unit Duration (days)</label>
+                <input type="number" class="form-control" name="unit_duration" required>
+            </div>
+            <div class="col-sm-4 mb-3">
+                <label class="form-label required-field">Day</label>
+                <input type="number" class="form-control" name="day_of_unit" required>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="mb-3">
+                <label class="form-label">Main Theme of this Lesson</label>
+                <input type="text" class="form-control" name="lesson_theme">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-6 mb-3">
+                <label for="rangeValue" class="form-label">Students' Ability Level (%)</label>
+                    <input type="range" id="rangeInput" name="ability_level" min="0" max="100" value="50">
+                    <span id="rangeValue">50</span>
+
+                    <script>
+                        const rangeInput = document.getElementById('rangeInput');
+                        const rangeValue = document.getElementById('rangeValue');
+
+                        rangeInput.addEventListener('input', () => {
+                            rangeValue.textContent = rangeInput.value;
+                        });
+                    </script>
+
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Psychomotor Performance Objectives</label>
+            <textarea class="form-control" name="psychomotor_objs" rows="3"></textarea>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Cognitive Performance Objectives</label>
+            <textarea class="form-control" name="cognitive_objs" rows="3"></textarea>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Affective Objectives</label>
+            <textarea class="form-control" name="affective_objs" rows="3"></textarea>
+        </div>
+
+        <div class="row">
+            <div class="mb-3">
+                <label class="form-label">Teaching Venue/Facility</label>
+                <input type="text" class="form-control" name="venue">
+            </div>
+        </div>
+        <div class="row">
+            <div class="mb-3">
+                <label class="form-label">Equipment</label>
+                <textarea class="form-control" name="equipment" rows="1"></textarea>
+            </div>
+        </div>
+        <div class="row">
+            <div class="mb-3">
+                <label class="form-label">Safety Concerns</label>
+                <textarea class="form-control" name="safety_concerns" rows="1"></textarea>
+            </div>
+        </div>
+
+<!-- Introduction Section -->
+<div class="row">
+    <h4>Introduction</h4>
+    <div class="col-sm-1 mb-3">
+        <label class="form-label">Time</label>
+        <input type="number" class="form-control" name="intro_time">
+    </div>
+    <div class="col-sm-5 mb-3">
+        <label class="form-label">Teaching Cues/Objectives</label>
+        <textarea class="form-control" name="intro_cues" rows="1"></textarea>
+    </div>
+    <div class="col-sm-3 mb-3">
+        <label class="form-label">Class Organisation Diagram</label>
+        <input type="file" class="form-control" name="intro_file" accept=".png,.jpg,.jpeg,.gif,.svg">
+    </div>
+    <div class="col-sm-3 mb-3">
+        <label class="form-label">Equipment</label>
+        <textarea class="form-control" name="intro_equipment" rows="1"></textarea>
+    </div>
+</div>
+
+<!-- Skill Development Section -->
+<div class="row">
+    <h4>Skill Development</h4>
+    <div class="col-sm-1 mb-3">
+        <label class="form-label">Time</label>
+        <input type="number" class="form-control" name="sd_time">
+    </div>
+    <div class="col-sm-5 mb-3">
+        <label class="form-label">Teaching Cues/Objectives</label>
+        <!-- FIXED: Changed from 'cd_cues' to 'sd_cues' -->
+        <textarea class="form-control" name="sd_cues" rows="1"></textarea>
+    </div>
+    <div class="col-sm-3 mb-3">
+        <label class="form-label">Class Organisation Diagram</label>
+        <input type="file" class="form-control" name="sd_file" accept=".png,.jpg,.jpeg,.gif,.svg">
+    </div>
+    <div class="col-sm-3 mb-3">
+        <label class="form-label">Equipment</label>
+        <textarea class="form-control" name="sd_equipment" rows="1"></textarea>
+    </div>
+</div>
+
+<!-- Application Section -->
+<div class="row">
+    <h4>Application</h4>
+    <div class="col-sm-1 mb-3">
+        <label class="form-label">Time</label>
+        <input type="number" class="form-control" name="appli_time">
+    </div>
+    <div class="col-sm-5 mb-3">
+        <label class="form-label">Teaching Cues/Objectives</label>
+        <textarea class="form-control" name="appli_cues" rows="1"></textarea>
+    </div>
+    <div class="col-sm-3 mb-3">
+        <label class="form-label">Class Organisation Diagram</label>
+        <input type="file" class="form-control" name="appli_file" accept=".png,.jpg,.jpeg,.gif,.svg">
+    </div>
+    <div class="col-sm-3 mb-3">
+        <label class="form-label">Equipment</label>
+        <textarea class="form-control" name="appli_equipment" rows="1"></textarea>
+    </div>
+</div>
+
+<!-- Concluding Activities Section -->
+<div class="row">
+    <h4>Concluding Activities</h4>
+    <div class="col-sm-1 mb-3">
+        <label class="form-label">Time</label>
+        <input type="number" class="form-control" name="ca_time">
+    </div>
+    <div class="col-sm-5 mb-3">
+        <label class="form-label">Teaching Cues/Objectives</label>
+        <textarea class="form-control" name="ca_cues" rows="1"></textarea>
+    </div>
+    <div class="col-sm-3 mb-3">
+        <label class="form-label">Class Organisation Diagram</label>
+        <input type="file" class="form-control" name="ca_file" accept=".png,.jpg,.jpeg,.gif,.svg">
+    </div>
+    <div class="col-sm-3 mb-3">
+        <label class="form-label">Equipment</label>
+        <textarea class="form-control" name="ca_equipment" rows="1"></textarea>
+    </div>
+</div>
+
+        <div class="row">
+            <div class="mb-3">
+                <label class="form-label">Follow-up Actions</label>
+                <textarea class="form-control" name="followup_actions" rows="1"></textarea>
+            </div>
+        </div>
+        <div class="row">
+            <div class="mb-3">
+                <label class="form-label">Self-reflection</label>
+                <textarea class="form-control" name="self_reflection" rows="1"></textarea>
+            </div>
+        </div>
+
+        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+            <a href="{{ url_for('index') }}" class="btn btn-secondary me-md-2">Cancel</a>
+            <button type="submit" class="btn btn-primary">Generate Lesson Plan</button>
+        </div>
+    </form>
+</div>
+{% endblock %}
